@@ -30,6 +30,15 @@ module.exports = {
                     }
                 });
             }
+            // Make sure email doesn't already exist in database
+            const userEmail = await User.findOne({ email });
+            if(userEmail) {
+                throw new UserInputError('User email is taken', {
+                    errors: {
+                        username: 'This email is taken'
+                    }
+                });
+            }
 
             // Hash password and create an auth token
             password = await bcrypt.hash(password, 12);
