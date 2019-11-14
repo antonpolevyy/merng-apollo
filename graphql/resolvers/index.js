@@ -8,10 +8,7 @@ module.exports = {
     Post: {
         // each time any query, mutation or subscription returns typeDef 'Post'
         // next operation will be called:
-        likeCount: (parent) => {
-            console.log(parent);
-            return parent.likes.length;
-        },
+        likeCount: (parent) => parent.likes.length,
         commentCount: (parent) => parent.comments.length
     },
     Query: {
