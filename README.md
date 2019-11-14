@@ -23,3 +23,10 @@ then go to http://localhost:5000/ and check right side bar 'DOCS' in Apollo's Gr
 Instead of installing ```npm i apollo-boost``` we install necessary dependancies manually and write file ApolloProvider ourselves. Because otherwise we could experience issues implementing authentication tokens (saving token and setting a middleware to check token)
 
 * if you are getting error from 'client/node_modules', then delete 'client/node_modules' folder and run ```$ npm install``` from the 'client' folder
+
+### Apollo Client Developer Tools
+use Chrome Extension 'Apollo Client Developer Tools' to play with GraphQL on the client side (from React)
+
+Once you add this Chrome Extension, you'll have 'Apollo" tab next to 'Console', 'Network' etc. in Inspector (F12 - shortcut). From there you'll see GraphiQL interface. 
+
+* in fact you'll see GraphiQL interface if you have successsfully connected to the server (and all the server's queries/mutations/subscriptions will be visible there)
