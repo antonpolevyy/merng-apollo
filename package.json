@@ -4,6 +4,7 @@
   "description": "MongoDB, Express, React, Node.js, GraphQL &amp; Apollo",
   "main": "server.js",
   "scripts": {
+    "serve": "node server",
     "start": "nodemon server"
   },
   "repository": {
