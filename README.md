@@ -16,3 +16,10 @@ to run server
 ```npm start```
 
 then go to http://localhost:5000/ and check right side bar 'DOCS' in Apollo's GraphQL Playground for queries, mutations and subscriptions
+
+## Part 2)
+
+### about ApolloProvider.js
+Instead of installing ```npm i apollo-boost``` we install necessary dependancies manually and write file ApolloProvider ourselves. Because otherwise we could experience issues implementing authentication tokens (saving token and setting a middleware to check token)
+
+* if you are getting error from 'client/node_modules', then delete 'client/node_modules' folder and run ```$ npm install``` from the 'client' folder
