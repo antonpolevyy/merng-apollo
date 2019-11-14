@@ -3,7 +3,12 @@ import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 function MenuBar() {
-  const [activeItem, setActiveItem] = useState('home');
+  // Use http pathname to highlight the manu button 
+  // (aka '/' for Home, '/login' for Login or '/register' for Register buttons)
+  const pathname = window.location.pathname;
+  // string('/login').substr(1) returns string('login')
+  const path = pathname === '/' ? 'home' : pathname.substr(1);
+  const [activeItem, setActiveItem] = useState(path);
 
   const handleItemClick = (e, { name }) => setActiveItem(name);
   return (
