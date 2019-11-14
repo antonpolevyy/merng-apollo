@@ -10,15 +10,20 @@ const { MONGODB } = require('./config.js');
 // ApolloServer runs Express behind the scenes
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    // get request from express and forward it to the context
+    // so we could later access it from the context like context.req.someVariable
+    // * The context object is one that gets passed to every single resolver at every level, so we can access it anywhere in our schema code.
+    context: ({ req }) => ({ req })
 });
 
 const PORT = process.env.PORT || 5000;
 
-mongoose.connect(MONGODB, { 
-    useNewUrlParser: true,
-    useUnifiedTopology: true 
-})
+mongoose
+    .connect(MONGODB, { 
+        useNewUrlParser: true,
+        useUnifiedTopology: true 
+    })
     .then(() => {
         console.log('MongoDB connected');
         return server.listen({ port: PORT })
