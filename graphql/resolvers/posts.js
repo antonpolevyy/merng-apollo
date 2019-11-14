@@ -38,6 +38,11 @@ module.exports = {
             });
       
             const post = await newPost.save();
+
+            // update Subscription 'NEW_POST'
+            context.pubsub.publish('NEW_POST', {
+                newPost: post
+            })
       
             return post;
         },
@@ -76,6 +81,13 @@ module.exports = {
                 await post.save();
                 return post;
             } else throw new UserInputError('Post not found');
+        }
+    },
+    Subscription: {
+        newPost: {
+            // in here {pubsub} means pass the pubsub from context
+            // 'NEW_POST' is a trigger name to use when upating subscription
+            subscribe: (_, __, { pubsub }) => pubsub.asyncIterator('NEW_POST')
         }
     }
 }

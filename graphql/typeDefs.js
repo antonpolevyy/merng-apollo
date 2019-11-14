@@ -48,4 +48,10 @@ module.exports = gql`
         deleteComment(postId:ID!, commentId: ID!): Post!
         likePost(postId: ID!): Post!
     }
+    # generally you would use Subscription for live chats or alike
+    # you can use it to automatically update the list of comments, 
+    # but it will start eating traffic should the app get a lot of users
+    type Subscription{
+        newPost: Post!
+    }
 `;
