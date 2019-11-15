@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { PromiseProvider } from 'mongoose';
 
 import { useForm } from '../util/hooks';
 
