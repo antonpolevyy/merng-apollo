@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 
 
 function Register() {
+    const [errors, setErrors] = useState({});
     const [values, setValues] = useState({
         username: '',
         email: '',
@@ -20,6 +21,13 @@ function Register() {
         update(proxy, result){
             console.log(result);
         },
+        onError(err){
+            // graphQLErrors can return multiple errors,
+            // but our gGraphQL server written in a way that 
+            // it gives one error object which holds all the errors
+            console.log(err.graphQLErrors[0].extensions.exception.errors);
+            setErrors(err.graphQLErrors[0].extensions.exception.errors);
+        },
         variables: values
     });
 
@@ -33,7 +41,7 @@ function Register() {
 
     return (
         <div className="form-container">
-           <Form onSubmit={onSubmit} noValidate className={loading ? 'loading': ''}>
+            <Form onSubmit={onSubmit} noValidate className={loading ? 'loading': ''}>
                 <h1>Register</h1>
                 <Form.Input 
                     label="Username"
@@ -70,7 +78,16 @@ function Register() {
                 <Button type="submit" primary>
                     Register
                 </Button>
-           </Form>
+            </Form>
+            {Object.keys(errors).length > 0 && (
+                <div className="ui error message">
+                    <ul className="list">
+                        {Object.values(errors).map((value) => (
+                            <li key={value}>{value}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 }
