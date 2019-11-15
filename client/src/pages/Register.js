@@ -4,40 +4,39 @@ import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { PromiseProvider } from 'mongoose';
 
+import { useForm } from '../util/hooks';
+
 
 function Register(props) {
     const [errors, setErrors] = useState({});
-    const [values, setValues] = useState({
+
+    const initialState = {
         username: '',
         email: '',
         password: '',
         confirmPassword: ''
-    });
-
-    const onChange = (event) => {
-        setValues({...values, [event.target.name]: event.target.value});
     }
+
+    const { onChange, onSubmit, values } = useForm(registerUser, initialState);
 
     const [addUser, { loading }] = useMutation(REGISTER_USER, {
         update(proxy, result){
-            console.log(result);
             props.history.push('/');
         },
         onError(err){
             // graphQLErrors can return multiple errors,
             // but our gGraphQL server written in a way that 
             // it gives one error object which holds all the errors
-            console.log(err.graphQLErrors[0].extensions.exception.errors);
             setErrors(err.graphQLErrors[0].extensions.exception.errors);
         },
         variables: values
     });
 
-    const onSubmit = (event) => {
-        event.preventDefault();
-        // field validation would go in here, 
-        // but we are validating user input on server side anyway
-
+    // workaround the situation where 'addUser' defined after 'values',
+    // but used in line with 'values' and vise versa
+    // it works because javascript reads everything with word 'function'
+    // before the line by line execution
+    function registerUser(){
         addUser();
     }
 
