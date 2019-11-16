@@ -41,3 +41,8 @@ In App.js all other components are wrapped under <AuthProvider> component, which
 
 
 ** using 'React Dev Tools' Chrome extension you can go to 'Components' tab (next to Console/Network/etc), and check the <AuthProvider> element (component), it shell have hooks with 'user' object (if you logged in successfully). And you can see that the child of <AuthProvider>, the <Context.Provider> component gets the 'user' object in props.value.user
+
+### HTTP HEADER
+We use setContext of 'apollo-link-context' to modify any requests before they are being sent.
+
+in ApolloProvider.js we get 'jwtToken' (JsonWebToken) from the Local Storage and make a HEADER out of it ('Bearer ...token...') or empty string '' if no token. Then we add it in front of the httpLink for GraphQL requests.
