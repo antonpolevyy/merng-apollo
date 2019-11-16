@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
+import { AuthContext } from '../context/auth';
+
 function MenuBar() {
+  const { user, logout } = useContext(AuthContext);
   // Use http pathname to highlight the manu button 
   // (aka '/' for Home, '/login' for Login or '/register' for Register buttons)
   const pathname = window.location.pathname;
@@ -11,7 +14,23 @@ function MenuBar() {
   const [activeItem, setActiveItem] = useState(path);
 
   const handleItemClick = (e, { name }) => setActiveItem(name);
-  return (
+
+  const menuBar = user ? (
+    <Menu pointing secondary size="massive" color="teal">
+      <Menu.Item
+        name={user.username}
+        active
+        as={Link}
+        to='/'
+      />
+      <Menu.Menu position='right'>
+        <Menu.Item
+          name='logout'
+          onClick={logout}
+        />
+      </Menu.Menu>
+    </Menu>
+  ) : (
     <Menu pointing secondary size="massive" color="teal">
       <Menu.Item
         name='home'
@@ -37,6 +56,12 @@ function MenuBar() {
         />
       </Menu.Menu>
     </Menu>
+  );
+
+  return (
+    <div>
+      {menuBar}
+    </div>
   )
 };
 
