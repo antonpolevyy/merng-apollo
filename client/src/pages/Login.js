@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
+import { AuthContext } from '../context/auth';
 import { useForm } from '../util/hooks';
 
 
 function Login(props) {
+    const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
 
     const { onChange, onSubmit, values } = useForm(loginUserCallbackUser, {
@@ -15,7 +17,15 @@ function Login(props) {
     });
 
     const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-        update(proxy, result){
+        // update(proxy, result){
+        update(_, { data: { login: userData } }){
+            // instead of update(proxy, result){..} 
+            // we use update(_, { data: { register: userData } }){..}
+            // by doing so, we ignore 'proxy' argument and destructure 'result'
+            // { data: { login: userData } means we destructure result.data 
+            // to get 'login' variable and rename it into 'userData'
+            console.log(userData);
+            context.login(userData);
             props.history.push('/');
         },
         onError(err){
