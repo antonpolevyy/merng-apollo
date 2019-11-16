@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
+import { AuthContext } from '../context/auth';
 import { useForm } from '../util/hooks';
 
 
 function Register(props) {
+    const context = useContext(AuthContext);
     const [errors, setErrors] = useState({});
 
     const initialState = {
@@ -19,7 +21,14 @@ function Register(props) {
     const { onChange, onSubmit, values } = useForm(registerUser, initialState);
 
     const [addUser, { loading }] = useMutation(REGISTER_USER, {
-        update(proxy, result){
+        update(_, { data: { register: userData } }){
+            // instead of update(proxy, result){..} 
+            // we use update(_, { data: { register: userData } }){..}
+            // by doing so, we ignore 'proxy' argument and destructure 'result'
+            // { data: { register: userData } means we destructure result.data 
+            // to get 'register' variable and rename it into 'userData'
+            console.log(userData);
+            context.login(userData);
             props.history.push('/');
         },
         onError(err){
