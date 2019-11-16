@@ -27,7 +27,6 @@ function Register(props) {
             // by doing so, we ignore 'proxy' argument and destructure 'result'
             // { data: { register: userData } means we destructure result.data 
             // to get 'register' variable and rename it into 'userData'
-            console.log(userData);
             context.login(userData);
             props.history.push('/');
         },

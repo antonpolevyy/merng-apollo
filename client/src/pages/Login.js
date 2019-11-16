@@ -24,7 +24,6 @@ function Login(props) {
             // by doing so, we ignore 'proxy' argument and destructure 'result'
             // { data: { login: userData } means we destructure result.data 
             // to get 'login' variable and rename it into 'userData'
-            console.log(userData);
             context.login(userData);
             props.history.push('/');
         },

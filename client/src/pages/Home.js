@@ -31,11 +31,9 @@ function Home() {
   let posts = '';
   const { loading, data } = useQuery(FETCH_POSTS_QUERY);
   console.log(`Loading: ${loading}`);
-  console.log(data);
 
   if(data){
     posts = data.getPosts;
-    console.log(posts);
   }
 
   return (

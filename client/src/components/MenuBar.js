@@ -58,11 +58,7 @@ function MenuBar() {
     </Menu>
   );
 
-  return (
-    <div>
-      {menuBar}
-    </div>
-  )
+  return menuBar;
 };
 
 export default MenuBar;
