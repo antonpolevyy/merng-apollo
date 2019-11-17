@@ -11,17 +11,18 @@ function PostForm() {
 
     const [createPost, { error }] = useMutation(CREATE_POST_MUTATION, {
         variables: values,
-        update(proxy, result){
-            // console.log(result);
-            // console.log(proxy);
+        update(proxy, result) {
             const data = proxy.readQuery({
                 query: FETCH_POSTS_QUERY
             });
-            data.getPosts = [result.data.createPost, ...data.getPosts];
-            proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+            const new_post = result.data.createPost;
+            proxy.writeQuery({
+                query: FETCH_POSTS_QUERY,
+                data: { getPosts: [new_post, ...data.getPosts] }
+            });
             values.body = '';
         }
-    })
+    });
 
     // workaround the situation where 'createPost' defined after 'values',
     // but it's called to get 'values'

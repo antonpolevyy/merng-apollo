@@ -10,7 +10,7 @@ const httpLink = createHttpLink({
     uri: 'http://localhost:5000'
 });
 
-// if token, create a string fro header ('Bearer ..token..')
+// if token, create a string for HTTP HEADER ('Bearer ..token..')
 const authLink = setContext(() => {
     const token = localStorage.getItem('jwtToken');
     return {
@@ -21,7 +21,8 @@ const authLink = setContext(() => {
 });
 
 const client = new ApolloClient({
-    // attach header in front of the httpLink
+    // attach HTTP HEADER in front of the httpLink
+    // to use it for all requests
     link: authLink.concat(httpLink),
     cache: new InMemoryCache()
 });

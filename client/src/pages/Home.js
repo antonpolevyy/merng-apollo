@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { Grid } from 'semantic-ui-react';
 
@@ -10,13 +10,17 @@ import { FETCH_POSTS_QUERY } from '../util/graphql'
 function Home() {
   const { user } = useContext(AuthContext);
 
-  let posts = '';
+  const [posts, setPosts] = useState([]);
   const { loading, data } = useQuery(FETCH_POSTS_QUERY);
-  console.log(`Loading: ${loading}`);
-  if(data){
-    posts = data.getPosts;
-    console.log('posts', posts);
-  }
+
+  // useEffect(callback) Hook tells React that after every render,
+  // the callback function should be called. 
+  // React will remember this callback and call it later after performing the DOM updates.
+  useEffect(() => {
+    if(data) {
+      setPosts(data.getPosts);
+    }
+  }, [data]);
 
   return (
     <Grid columns={3}>
