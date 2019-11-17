@@ -46,3 +46,13 @@ In App.js all other components are wrapped under <AuthProvider> component, which
 We use setContext of 'apollo-link-context' to modify any requests before they are being sent.
 
 in ApolloProvider.js we get 'jwtToken' (JsonWebToken) from the Local Storage and make a HEADER out of it ('Bearer ...token...') or empty string '' if no token. Then we add it in front of the httpLink for GraphQL requests.
+
+### Apollo Cache (Direct Cache Access)
+In 'Apollo Dev Tools' Chrome extension, under 'Cache' on the left side, you can see the history of all the requests that have been done durig current session. 
+It includes responses of successful Mutations. Therefore, when user adds a Document to a Collection, we don't have to fetch all the collection again, we can get the last Document from the Cache instead. 
+
+For example, in order not to send a new request to fetch all the 'posts' after user has added a new 'post', ew can "send a request" to our local Apollo Cache memory to get neccessary data. 
+In other words, instead of sending 3 requests to MongoDB (1 - get all posts; 2 - add new post; 3 - get all posts) we can send 2 requests to MongoDB and 3rd one to local Apollo Cache (1 - get all posts from MongoDB; 2 - add new post to MongoDB; 3 - get all posts from Apollo Cache)
+
+** You can read about Direct Cache Access in https://www.apollographql.com/docs/angular/basics/caching/
+which is kinda almost what is we doing, but they are using ApolloClient (through getClient() ), however we are using 'proxy' object

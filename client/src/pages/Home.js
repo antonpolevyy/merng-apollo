@@ -15,6 +15,7 @@ function Home() {
   console.log(`Loading: ${loading}`);
   if(data){
     posts = data.getPosts;
+    console.log('posts', posts);
   }
 
   return (
