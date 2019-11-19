@@ -13,12 +13,14 @@ function DeleteButton({ postId }) {
             setConfirmOpen(false);
 
             // remove post from cache
-            // ! Issue: deletes from Apollo's Cache, but not visible in Home page until page reload
             const data = proxy.readQuery({
                 query: FETCH_POSTS_QUERY
             });
-            data.getPosts = data.getPosts.filter(post => post.id !== postId);
-            proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
+            const new_posts = data.getPosts.filter(post => post.id !== postId)
+            proxy.writeQuery({ 
+                query: FETCH_POSTS_QUERY, 
+                data: { getPosts: [...new_posts] }
+            });
         },
         variables: { postId }
     })
