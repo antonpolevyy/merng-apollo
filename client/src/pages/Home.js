@@ -16,6 +16,7 @@ function Home() {
   // useEffect(callback) Hook tells React that after every render,
   // the callback function should be called. 
   // React will remember this callback and call it later after performing the DOM updates.
+  // dependency array [data] means that callback is called if [data] changes 
   useEffect(() => {
     if(data) {
       setPosts(data.getPosts);
