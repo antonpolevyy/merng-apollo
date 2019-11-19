@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
-function DeleteButton({ postId }) {
+function DeleteButton({ postId, callback }) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const [deletePost] = useMutation(DELETE_POST_MUTATION, {
@@ -21,6 +21,10 @@ function DeleteButton({ postId }) {
                 query: FETCH_POSTS_QUERY, 
                 data: { getPosts: [...new_posts] }
             });
+
+            // callback function is called when useMutation is done
+            // it used in SinglePost page to redirect to Home page
+            if(callback) callback();
         },
         variables: { postId }
     })
