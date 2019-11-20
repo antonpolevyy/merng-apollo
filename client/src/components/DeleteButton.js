@@ -5,28 +5,35 @@ import { useMutation } from '@apollo/react-hooks';
 
 import { FETCH_POSTS_QUERY } from '../util/graphql';
 
-function DeleteButton({ postId, callback }) {
+function DeleteButton({ postId, commentId, callback }) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const [deletePost] = useMutation(DELETE_POST_MUTATION, {
+    const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
+
+    const [deletePostOrComment] = useMutation(mutation, {
         update(proxy){
             setConfirmOpen(false);
 
-            // remove post from cache
-            const data = proxy.readQuery({
-                query: FETCH_POSTS_QUERY
-            });
-            const new_posts = data.getPosts.filter(post => post.id !== postId)
-            proxy.writeQuery({ 
-                query: FETCH_POSTS_QUERY, 
-                data: { getPosts: [...new_posts] }
-            });
+            if(!commentId){
+                // remove post from cache
+                const data = proxy.readQuery({
+                    query: FETCH_POSTS_QUERY
+                });
+                const new_posts = data.getPosts.filter(post => post.id !== postId)
+                proxy.writeQuery({ 
+                    query: FETCH_POSTS_QUERY, 
+                    data: { getPosts: [...new_posts] }
+                });
+            }
 
             // callback function is called when useMutation is done
             // it used in SinglePost page to redirect to Home page
             if(callback) callback();
         },
-        variables: { postId }
+        variables: { 
+            postId, 
+            commentId
+        }
     })
 
     return(
@@ -42,7 +49,7 @@ function DeleteButton({ postId, callback }) {
             <Confirm
                 open={confirmOpen}
                 onCancel={() => setConfirmOpen(false)}
-                onConfirm={deletePost}
+                onConfirm={deletePostOrComment}
             ></Confirm>
         </>
     );
@@ -51,6 +58,21 @@ function DeleteButton({ postId, callback }) {
 const DELETE_POST_MUTATION = gql`
     mutation deletePost($postId: ID!){
         deletePost(postId: $postId)
+    }
+`;
+
+const DELETE_COMMENT_MUTATION = gql`
+    mutation deleteComment($postId: ID!, $commentId: ID!){
+        deleteComment(postId: $postId, commentId: $commentId){
+            id
+            commentCount
+            comments{
+                id 
+                username
+                createdAt
+                body
+            }
+        }
     }
 `;
 
