@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
-import { Button, Card, Grid, Image, Icon, Label } from 'semantic-ui-react';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { Button, Card, Form, Grid, Image, Icon, Label } from 'semantic-ui-react';
 import moment from 'moment';
 
 import { AuthContext } from '../context/auth';
@@ -10,8 +10,9 @@ import DeleteButton from '../components/DeleteButton';
 
 function SinglePost(props) {
     const postId = props.match.params.postId;
-    console.log(postId);
     const { user } = useContext(AuthContext);
+
+    const [comment, setComment] = useState('');
 
     // const { data: { getPost } } = useQuery(FETCH_POST_QUERY, {
     //     variables: { postId }
@@ -19,6 +20,16 @@ function SinglePost(props) {
     const { data } = useQuery(FETCH_POST_QUERY, {
         variables: { postId }
     });
+
+    const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
+        update(){
+            setComment('');
+        },
+        variables: {
+            postId,
+            body: comment
+        }
+    }); 
 
     function deletePostCallback(){
         props.history.push('/');
@@ -68,6 +79,31 @@ function SinglePost(props) {
                                 )}
                             </Card.Content>
                         </Card>
+                        {user && (
+                            <Card fluid>
+                                <Card.Content>
+                                    <p>Post a comment</p>
+                                    <Form>
+                                        <div className="ui action input fluid">
+                                            <input 
+                                                type="text"
+                                                placeholder="Comment..."
+                                                name="comment"
+                                                value={comment}
+                                                onChange={event => setComment(event.target.value)}
+                                            />
+                                            <button type="submit" 
+                                                className="ui button teal"
+                                                disabled={comment.trim() === ''}
+                                                onClick={submitComment}
+                                            >
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </Form>
+                                </Card.Content>
+                            </Card>
+                        )}
                         {comments.map(comment => (
                             <Card fluid key={comment.id}>
                                 <Card.Content>
@@ -108,6 +144,21 @@ const FETCH_POST_QUERY = gql`
                 username
                 createdAt
                 body
+            }
+        }
+    }
+`;
+
+const SUBMIT_COMMENT_MUTATION = gql`
+    mutation($postId: ID!, $body: String!){
+        createComment(postId: $postId, body: $body){
+            id
+            commentCount
+            comments{
+                id
+                body
+                createdAt
+                username
             }
         }
     }
